@@ -1,0 +1,37 @@
+0040 "Medical Instruments"
+
+01 CA "Medical Ultrasound"
+
+20 OOC "VCR/Acquisition"
+21 OOC "Freeze/Thaw"
+22 OSC "Clip Store"
+23 OSC "Update"
+24 OSC "Next"
+25 OSC "Save"
+26 OSC "Print"
+27 OSC "Microphone Enable"
+
+40 LC "Cine"
+41 LC "Transmit Power"
+42 LC "Volume"
+43 LC "Focus"
+44 LC "Depth"
+
+60 LC "Soft Step - Primary"
+61 LC "Soft Step - Secondary"
+
+70 LC "Depth Gain Compensation"
+
+80 OSC "Zoom Select"
+81 LC "Zoom Adjust"
+82 OSC "Spectral Doppler Mode Select"
+83 LC "Spectral Doppler Adjust"
+84 OSC "Color Doppler Mode Select"
+85 LC "Color Doppler Adjust"
+86 OSC "Motion Mode Select"
+87 LC "Motion Mode Adjust"
+88 OSC "2D Mode Select"
+89 LC "2D Mode Adjust"
+
+a0 OSC "Soft Control Select"
+a1 LC "Soft Control Adjust"

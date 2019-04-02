@@ -1,0 +1,4 @@
+0090 "Camera Control"
+
+20 OSC "Camera Auto-focus"
+21 OSC "Camera Shutter"

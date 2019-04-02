@@ -1,0 +1,4 @@
+0009 "Button"
+
+0000 Sel "No button pressed"
+0001:FFFF Sel,OOC,MC,OSC "Button {n+1}"

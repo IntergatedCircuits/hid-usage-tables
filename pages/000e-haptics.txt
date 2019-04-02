@@ -1,0 +1,24 @@
+000e "Haptics"
+
+01 CA,CL "Simple Haptic Controller"
+
+10 NAry(1001:1007) "Waveform List"
+11 NAry() "Duration List"
+
+20 DV "Auto Trigger"
+21 DV "Manual Trigger"
+22 SV "Auto Trigger Associated Control"
+23 DV "Intensity"
+24 DV "Repeat Count"
+25 DV "Retrigger Period"
+26 SV "Waveform Vendor Page"
+27 SV "Waveform Vendor ID"
+28 SV "Waveform Cutoff Time"
+
+1001 Sel "WAVEFORM_NONE"
+1002 Sel "WAVEFORM_STOP"
+1003 Sel "WAVEFORM_CLICK"
+1004 Sel "WAVEFORM_BUZZ_CONTINUOUS"
+1005 Sel "WAVEFORM_RUMBLE_CONTINUOUS"
+1006 Sel "WAVEFORM_PRESS"
+1007 Sel "WAVEFORM_RELEASE"

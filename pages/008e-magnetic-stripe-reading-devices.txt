@@ -1,0 +1,10 @@
+008e "Magnetic Stripe Reading (MSR) Devices"
+
+01 CA "MSR Device Read-Only"
+
+11:13 SF,DF,Sel "Track {n+1} Length"
+14 SF,DF,Sel "Track JIS Length"
+
+20 SF,DF,Sel "Track Data"
+21:23 SF,DF,Sel "Track {n+1} Data"
+24 SF,DF,Sel "Track JIS Data"

@@ -1,0 +1,15 @@
+0003 "VR Controls"
+
+01 CA "Belt"
+02 CA "Body Suit"
+03 CP "Flexor"
+04 CA "Glove"
+05 CP "Head Tracker"
+06 CA "Head Mounted Display"
+07 CA "Hand Tracker"
+08 CA "Oculometer"
+09 CA "Vest"
+0a CA "Animatronic Device"
+
+20 OOC "Stereo Enable"
+21 OOC "Display Enable"
