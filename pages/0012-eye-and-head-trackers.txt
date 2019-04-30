@@ -1,0 +1,42 @@
+0012 "Eye and Head Trackers"
+
+01 CA "Eye Tracker"
+02 CA "Head Tracker"
+
+10 CP "Tracking Data"
+11 CL "Capabilities"
+12 CL "Configuration"
+13 CL "Status"
+14 CL "Control"
+
+20 DV "Sensor Timestamp"
+21 DV "Position X"
+22 DV "Position Y"
+23 DV "Position Z"
+24 CP "Gaze Point"
+25 CP "Left Eye Position"
+26 CP "Right Eye Position"
+27 CP "Head Position"
+28 CP "Head Direction Point"
+29 DV "Rotation about X axis"
+2a DV "Rotation about Y axis"
+2b DV "Rotation about Z axis"
+
+100 SV "Tracker Quality"
+101 SV "Minimum Tracking Distance"
+102 SV "Optimum Tracking Distance"
+103 SV "Maximum Tracking Distance"
+104 SV "Maximum Screen Plane Width"
+105 SV "Maximum Screen Plane Height"
+
+200 SV "Display Manufacturer ID"
+201 SV "Display Product ID"
+202 SV "Display Serial Number"
+203 SV "Display Manufacturer Date"
+204 SV "Calibrated Screen Width"
+205 SV "Calibrated Screen Height"
+
+300 DV "Sampling Frequency"
+301 DV "Configuration Status"
+
+400 DV "Device Mode Request"
