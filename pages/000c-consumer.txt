@@ -274,6 +274,8 @@ f5 OSC "Slow"
 1c7 Sel "AL Audio Player"
 1c8 Sel "AL Navigation"
 
+1cb Sel "AL Context-aware desktop assistant"
+
 200 NAry(201:209,21a:22e,230:234,236:237,239:2a0) "Generic GUI Application Controls"
 201 Sel "AC New"
 202 Sel "AC Open"
