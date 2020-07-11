@@ -114,6 +114,7 @@ e0 CA,CP "Other"
 e1 CA,CP "Other: Custom"
 e2 CA,CP "Other: Generic"
 e3 CA,CP "Other: Generic Enumerator"
+e4 CA,CP "Other: Hinge Angle"
 
 0201 NAry(0800:0806) "Event: Sensor State"
 0202 NAry(0810:0820) "Event: Sensor Event"
@@ -382,6 +383,9 @@ e3 CA,CP "Other: Generic Enumerator"
 0580 DV "Property: Generic"
 0581 DV "Property: Enumerator Table Row Index"
 0582 SV "Property: Enumerator Table Row Count"
+
+05e0 SV,DV "Data Field: Hinge"
+05e1 SV,DV "Data Field: Hinge Angle"
 
 0800 Sel "Sensor State: Undefined"
 0801 Sel "Sensor State: Ready"
