@@ -76,6 +76,7 @@
 98 OOC "System Function Shift Lock"
 99 DV "System Function Shift Lock Indicator"
 9a OSC "System Dismiss Notification"
+9b OOC "System Do Not Disturb"
 
 a0 OSC "System Dock"
 a1 OSC "System Undock"
