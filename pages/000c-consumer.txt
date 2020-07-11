@@ -437,4 +437,8 @@ f5 OSC "Slow"
 2cb Sel "Keyboard Input Assist Accept"
 2cc Sel "Keyboard Input Assist Cancel"
 
-
+2d0 OOC "Privacy Screen Toggle"
+2d1 RTC "Privacy Screen Level Decrement"
+2d2 RTC "Privacy Screen Level Increment"
+2d3 OSC "Privacy Screen Level Minimum"
+2d4 OSC "Privacy Screen Level Maximum"
