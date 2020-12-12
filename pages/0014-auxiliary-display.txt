@@ -69,3 +69,15 @@
 93 SV "Soft Button Offset 1"
 94 SV "Soft Button Offset 2"
 95 SV "Soft Button Report"
+
+c2 SV "Soft Keys"
+
+cc SF "Display Data Extensions"
+
+cf SV "Character Mapping"
+
+dd SV "Unicode Equivalent"
+
+df SV "Character Page Mapping"
+
+ff DV "Request Report"
