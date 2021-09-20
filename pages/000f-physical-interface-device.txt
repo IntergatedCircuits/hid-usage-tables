@@ -86,7 +86,7 @@
 8c Sel "Block Load Success"
 8d Sel "Block Load Full"
 8e Sel "Block Load Error"
-8f "Block Handle"
+8f DV "Block Handle"
 90 CL "PID Block Free Report"
 91 CL "Type Specific Block Handle"
 92 CL "PID State Report"
