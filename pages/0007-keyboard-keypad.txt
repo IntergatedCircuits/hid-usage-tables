@@ -1,6 +1,5 @@
 0007 "Keyboard/Keypad"
 
-00 Sel "None"
 01 Sel "ErrorRollOver"
 02 Sel "POSTFail"
 03 Sel "ErrorUndefined"
@@ -53,7 +52,7 @@
 32 Sel "# ~"
 33 Sel "; :"
 34 Sel "' ""
-35 Sel "` Â´"
+35 Sel "` ´"
 36 Sel ", <"
 37 Sel ". >"
 38 Sel "/ ?"

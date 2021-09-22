@@ -1,91 +1,91 @@
 0082 "VESA Virtual Controls"
 
-01
+01 DF "Degauss"
 
-10
+10 DV "Brightness"
 
-12
+12 DV "Contrast"
 
-16
+16 DV "Red Video Gain"
 
-18
+18 DV "Green Video Gain"
 
-1a
+1a DV "Blue Video Gain"
 
-1c
+1c DV "Focus"
 
-20
+20 DV "Horizontal Position"
 
-22
+22 DV "Horizontal Size"
 
-24
+24 DV "Horizontal Pincushion"
 
-26
+26 DV "Horizontal Pincushion Balance"
 
-28
+28 DV "Horizontal Misconvergence"
 
-2a
+2a DV "Horizontal Linearity"
 
-2c
+2c DV "Horizontal Linearity Balance"
 
-30
+30 DV "Vertical Position"
 
-32
+32 DV "Vertical Size"
 
-34
+34 DV "Vertical Pincushion"
 
-36
+36 DV "Vertical Pincushion Balance"
 
-38
+38 DV "Vertical Misconvergence"
 
-3a
+3a DV "Vertical Linearity"
 
-3c
+3c DV "Vertical Linearity Balance"
 
-40
+40 DV "Parallelogram Distortion (Key Balance)"
 
-42
+42 DV "Trapezoidal Distortion (Key)"
 
-44
+44 DV "Tilt (Rotation)"
 
-46
+46 DV "Top Corner Distortion Control"
 
-48
+48 DV "Top Corner Distortion Balance"
 
-4a
+4a DV "Bottom Corner Distortion Control"
 
-4c
+4c DV "Bottom Corner Distortion Balance"
 
-56
+56 DV "Horizontal Moire"
 
-58
+58 DV "Vertical Moire"
 
-5e
+5e NAry() "Input Level Select"
 
-60
+60 NAry() "Input Source Select"
 
-6c
+6c DV "Red Video Black Level"
 
-6e
+6e DV "Green Video Black Level"
 
-70
+70 DV "Blue Video Black Level"
 
-a2
+a2 NAry() "Auto Size Center"
 
-a4
+a4 NAry() "Polarity Horizontal Synchronization"
 
-a6
+a6 NAry() "Polarity Vertical Synchronization"
 
-a8
+a8 NAry() "Synchronization Type"
 
-aa
+aa NAry() "Screen Orientation"
 
-ac
+ac SV "Horizontal Frequency"
 
-ae
+ae SV "Vertical Frequency"
 
-b0
+b0 NAry() "Settings"
 
-ca
+ca NAry() "On Screen Display"
 
-d4
+d4 NAry() "StereoMode"
