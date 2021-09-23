@@ -27,7 +27,7 @@
 52 DV "Green Update Channel"
 53 DV "Blue Update Channel"
 54 DV "Intensity Update Channel"
-55 DF "Lamp Update Complete"
+55 DV "Lamp Update Flags"
 60 CL "Lamp Range Update Report"
 61 DV "Lamp ID Start"
 62 DV "Lamp ID End"
