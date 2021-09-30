@@ -53,36 +53,38 @@ class CodeGenerator():
                 if len(page.usages) == 0:
                     # empty page
                     file.write(cls.numeric(page_name, page.id, 0))
-                elif len(page.usages) == 1 and page.usages[0].count() == 0xffff:
+                elif len(page.usages) == 1 and page.usages[0].id_count() == 0xffff:
                     # special optimization for simple numeric usage pages:
                     # only consider 1-255 as useful range
                     file.write(cls.numeric(page_name, page.id, 0xff))
                 else:
                     # enum style page
-                    max_usage = page.usages[-1].id_max
+                    max_usage = page.usages[-1].id_range()[-1]
                     file.write(cls.enum_begin(page_name, page.id, max_usage))
                     table = dict()
-                    excludes = list()
-                    excludes.append(None)
+                    excludes = set()
+                    excludes.add(None)
 
                     # first round is to generate valid names and collect duplicates
-                    for primitive in page.usages:
-                        for i in range(primitive.count()):
-                            name = primitive.name(i)
+                    for usage in page.usages:
+                        for id in usage.id_range():
+                            name = usage.name(id)
                             usage_name = str_to_identifier(name)
 
-                            for value in table.values():
-                                # gather duplicates
-                                if excludes.count(value[1]) == 0 and value[1] == usage_name:
-                                    excludes.append(usage_name)
+                            if usage_name not in excludes:
+                                for value in table.values():
+                                    # gather duplicate identifier strings
+                                    if value[1] == usage_name:
+                                        excludes.add(usage_name)
+                                        break
 
-                            table[primitive.id_min + i] = (name, usage_name)
+                            table[id] = (name, usage_name)
 
                     # second round is to write unique 
                     for id in table:
                         name = table[id][0]
                         usage_name = table[id][1]
-                        if excludes.count(usage_name) == 0:
+                        if usage_name not in excludes:
                             file.write(cls.enum_entry(usage_name, id))
                         else:
                             # if not valid, print a comment instead

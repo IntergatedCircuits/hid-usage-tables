@@ -6,6 +6,7 @@ copyright:
          If a copy of the MPL was not distributed with this file, You can obtain one at
          https://mozilla.org/MPL/2.0/."""
 from enum import Enum, unique
+from abc import ABCMeta, abstractmethod
 import re
 
 class HidUsageError(Exception):
@@ -35,72 +36,85 @@ class HidUsageType(Enum):
     BUFFERED_BYTES = 'BB' # no static meaning, data stream
     INLINE_USAGE_SWITCH = 'IUS' # the value of the Modifier is OR-ed in to the top 4 bits of the un-modified Usage ID
 
-class HidUsagePrimitive():
+def check_id(id):
+    if not (id > 0 and id < 0x10000):
+        raise HidUsageError('Invalid usage ID')
+
+class HidUsagePrimitive(metaclass=ABCMeta):
     """Base type for HID usage definitions"""
-    def __init__(self, name, types, id_min, id_max):
-        if not (id_min > 0 and id_min < 0x10000):
-            raise HidUsageError()
-        if not (id_max > 0 and id_max < 0x10000):
-            raise HidUsageError()
+    def __init__(self, name, types):
         self._name = name
         self._types = types
-        self._id_min = id_min
-        self._id_max = id_max
 
     @property
     def types(self):
         """HidUsageType"""
         return self._types
 
-    def count(self):
+    @abstractmethod
+    def id_count(self):
         """The number of usages covered by this primitive"""
-        return 1 + self._id_max - self._id_min
+        pass
 
-    @property
-    def id_min(self):
-        return self._id_min
+    @abstractmethod
+    def id_range(self):
+        """The range of IDs"""
+        pass
 
-    @property
-    def id_max(self):
-        return self._id_max
-
-    def name(self, index = 0):
-        """Generate the name of the usage (by the selected index if the usage primitive covers a range)."""
-        if index >= self.count():
-            raise ValueError('HidUsagePrimitive index is out of range')
+    def name(self, id):
+        """Get the name of the usage by ID."""
         return self._name
 
 class HidUsage(HidUsagePrimitive):
     """Single HID usage"""
     def __init__(self, name, types, id):
-        super().__init__(name, types, id, id)
+        super().__init__(name, types)
+        check_id(id)
+        self._id = id
 
-    @property
-    def id(self):
-        return self._id_min
+    def id_count(self):
+        return 1
+
+    def id_range(self):
+        # range end is invalid
+        return range(self._id, self._id + 1)
 
 class HidUsageRange(HidUsagePrimitive):
-    """HID usage ID range"""
-    def name(self, index = 0):
+    """Continuous range of HID usages"""
+    def __init__(self, name, types, id_min, id_max):
+        super().__init__(name, types)
+        check_id(id_min)
+        check_id(id_max)
+        self._id_min = id_min
+        self._id_max = id_max
+
+    def id_count(self):
+        """The number of usages covered by this primitive"""
+        return 1 + self._id_max - self._id_min
+
+    def id_range(self):
+        # range end is invalid
+        return range(self._id_min, self._id_max + 1)
+
+    def name(self, id):
         """Generate the name of the usage."""
-        if index >= self.count():
-            raise ValueError('HidUsagePrimitive index is out of range')
+        if id < self._id_min or id > self._id_max:
+            raise HidUsageError('Invalid usage ID')
 
         _name_calc_regex = re.compile('([^{}]*)[{]([-+*/n0-9 ]+)[}]([^{}]*)')
-
+        # the name shall contain a {} enclosed expression that can be evaluated by substituting n with index
         match = _name_calc_regex.fullmatch(self._name)
         if match != None:
-            n = index
+            n = id - self._id_min
             s = match.group(1) + str(eval(match.group(2))) + match.group(3)
             return s
         else:
-            return super().name(index)
+            raise HidUsageError('HidUsageRange name format invalid')
 
 class HidPage():
     """HID usage page"""
     def __init__(self, id, name, description):
-        if not (id > 0 and id < 0x10000):
-            raise HidUsageError()
+        check_id(id)
         self._id = id
         self._name = name
         self._desc = description
