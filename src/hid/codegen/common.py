@@ -6,35 +6,37 @@ copyright:
          If a copy of the MPL was not distributed with this file, You can obtain one at
          https://mozilla.org/MPL/2.0/."""
 import re
+from abc import ABCMeta, abstractmethod
 
-def str_to_identifier(name):
-    """Converts any string to a valid identifier in programming languages."""
-
-    # replace all non-supported characters to whitespace
-    id = re.sub('[^\w]+', ' ', name)
-    # replace any section of whitespaces with underscore
-    id = re.sub('[\s]+', '_', id)
-    # remove leading and trailing underscores
-    id = id.strip('_')
-    if len(id) == 0:
-        # nothing meaningful is left
-        return None
-
-    # convert to uppercase
-    id = id.upper()
-
-    # if all parts are the same, keep only one part
-    ids = id.split('_')
-    if len(ids) > 1 and ids.count(ids[0]) == len(ids):
-        id = ids[0]
-
-    if id[0].isdigit():
-        # digits are only not allowed as first character
-        id = '_' + id;
-    return id
-
-class CodeGenerator():
+class CodeGenerator(metaclass=ABCMeta):
     """Abstract class for code generation."""
+
+    @classmethod
+    def str_to_identifier(cls, name):
+        """Converts any string to a valid identifier in programming languages."""
+
+        # replace all non-supported characters to whitespace
+        id = re.sub('[^\w]+', ' ', name)
+        # replace any section of whitespaces with underscore
+        id = re.sub('[\s]+', '_', id)
+        # remove leading and trailing underscores
+        id = id.strip('_')
+        if len(id) == 0:
+            # nothing meaningful is left
+            return None
+
+        # convert to uppercase
+        id = id.upper()
+
+        # if all parts are the same, keep only one part
+        ids = id.split('_')
+        if len(ids) > 1 and ids.count(ids[0]) == len(ids):
+            id = ids[0]
+
+        if id[0].isdigit():
+            # digits are only not allowed as first character
+            id = '_' + id;
+        return id
 
     @classmethod
     def generate(cls, hid_pages, dest_path):
@@ -45,8 +47,8 @@ class CodeGenerator():
         os.makedirs(dest_path)
 
         for page in hid_pages:
-            page_name = str_to_identifier(page.name)
-            filepath = os.path.join(dest_path, cls.page_filename(page))
+            page_name = cls.str_to_identifier(page.name)
+            filepath = os.path.join(dest_path, cls.page_filename(page_name))
             file = open(filepath, 'w')
             try:
                 file.write(cls.header(page_name))
@@ -69,7 +71,7 @@ class CodeGenerator():
                     for usage in page.usages:
                         for id in usage.id_range():
                             name = usage.name(id)
-                            usage_name = str_to_identifier(name)
+                            usage_name = cls.str_to_identifier(name)
 
                             if usage_name not in excludes:
                                 for value in table.values():
@@ -94,3 +96,46 @@ class CodeGenerator():
 
             finally:
                 file.close()
+        return
+
+    @classmethod
+    @abstractmethod # the decorator order here is fixed
+    def page_filename(cls, page_name):
+        """Creates the filename for the usage page."""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def header(cls, page_name):
+        """The header part of the usage page file."""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def footer(cls, page_name):
+        """The footer part of the usage page file."""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def numeric(cls, page_name, page_id, max_usage = 0xff):
+        """Format for a purely numeric usage page (single usage primitive for the entire page)."""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def enum_begin(cls, page_name, page_id, max_usage):
+        """Start of an enumeration style usage page."""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def enum_entry(cls, usage_name, id):
+        """One valid enumeration usage entry."""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def enum_comment_entry(cls, usage_name, id):
+        """One invalid enumeration usage entry, as comment."""
+        pass

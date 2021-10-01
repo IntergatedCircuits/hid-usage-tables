@@ -18,8 +18,8 @@ class CppGenerator(CodeGenerator):
     """Generate c++ header files from HID usage page database."""
 
     @classmethod
-    def page_filename(cls, page):
-        return f'{str_to_identifier(page.name).lower()}.h'
+    def page_filename(cls, page_name):
+        return f'{page_name.lower()}.h'
 
     @classmethod
     def header(cls, name):
