@@ -65,8 +65,7 @@ def parse_page(filepath, shortname):
         ''', re.VERBOSE)
 
     page = None
-    file = open(filepath, 'r')
-    try:
+    with open(filepath, mode='rt', encoding='utf-8')  as file:
         # first line is the id and name of the page
         line = file.readline()
         match = page_regex.fullmatch(line)
@@ -116,9 +115,6 @@ def parse_page(filepath, shortname):
 
             #unknown field
             raise HidParserError(filepath, line)
-
-    finally:
-        file.close()
 
     return page
 
