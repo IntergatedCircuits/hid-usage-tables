@@ -99,7 +99,7 @@
 61 Sel "Keypad 9"
 62 Sel "Keypad 0"
 63 Sel "Keypad ."
-64 Sel "\ |"
+64 Sel "Non-US \|"
 65 Sel "Application"
 66 Sel "Power"
 67 Sel "Keypad ="
