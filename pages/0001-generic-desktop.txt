@@ -18,6 +18,7 @@
 10 CA "Assistive Control"
 11 CA "Device Dock"
 12 CA "Dockable Device"
+13 CA "Call State Management Control"
 
 30 DV "X"
 31 DV "Y"
@@ -117,3 +118,7 @@ d3 DV "Dockable Device Primary Usage ID"
 d4 DF "Dockable Device Docking State"
 d5 CL "Dockable Device Display Occlusion"
 d6 DV "Dockable Device Object Type"
+
+e0 OOC "Call Active LED"
+e1 OSC "Call Mute Toggle"
+e2 OOC "Call Mute LED"
