@@ -141,6 +141,7 @@ d5 OSC "Start or Stop Microphone Capture"
 d6 OSC "Start or Stop Camera Capture"
 d7 OSC "Start or Stop Game Broadcast"
 d8 OOC "Start or Stop Voice Dictation Session"
+d9 OOC "Invoke/Dismiss Emoji Picker"
 
 e0 LC "Volume"
 e1 LC "Balance"
