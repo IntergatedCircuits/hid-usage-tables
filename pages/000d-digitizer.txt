@@ -76,6 +76,7 @@
 6b SV "Capacitive Heat Map Protocol Version"
 6c DV "Capacitive Heat Map Frame Data"
 6d DF "Gesture Character Enable"
+6e SV "Transducer Serial Number Part 2"
 
 90 CL "Transducer Software Info"
 91 SV "Transducer Vendor ID"
