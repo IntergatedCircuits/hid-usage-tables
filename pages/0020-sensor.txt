@@ -291,6 +291,7 @@ f0:ff CA,CP "Vendor Reserved {n+1}"
 04ba SV "Data Field: Heartbeat Interval"
 04bb SV "Data Field: Respiratory Rate"
 04bc SV "Data Field: SpO2 (percent)"
+04bd MC "Data Field: Human Attention Detected"
 
 04d0 SV "Data Field: Light"
 04d1 SV "Data Field: Illuminance"
