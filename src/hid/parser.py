@@ -22,14 +22,9 @@ def parse_types(typestr):
 
     # split into list
     typesaslist = typestr.split(',')
-    types = list()
 
-    for t in typesaslist:
-        # lookup in enum table
-        typ = HidUsageType(t)
-        types.append(typ)
-
-    return types
+    # lookup in enum table
+    return [HidUsageType(t) for t in typesaslist]
 
 def parse_page(filepath, shortname):
     """Parses an HID usage page text file into HidPage"""
@@ -65,7 +60,7 @@ def parse_page(filepath, shortname):
         ''', re.VERBOSE)
 
     page = None
-    with open(filepath, mode='rt', encoding='utf-8')  as file:
+    with open(filepath, mode='rt', encoding='utf-8') as file:
         # first line is the id and name of the page
         line = file.readline()
         match = page_regex.fullmatch(line)

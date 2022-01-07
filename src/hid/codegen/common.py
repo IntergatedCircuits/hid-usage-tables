@@ -93,8 +93,7 @@ class CodeGenerator(metaclass=ABCMeta):
         for page in hid_pages:
             page_name = cls.str_to_identifier(page.name)
             filepath = os.path.join(dest_path, cls.page_filename(page_name))
-            file = open(filepath, 'w')
-            try:
+            with open(filepath, 'w') as file:
                 file.write(cls.header(page_name))
                 if len(page.usages) == 0:
                     # empty page
@@ -137,9 +136,6 @@ class CodeGenerator(metaclass=ABCMeta):
                             file.write(cls.enum_comment_entry(name, id))
 
                 file.write(cls.footer(page_name))
-
-            finally:
-                file.close()
         return
 
     @classmethod
