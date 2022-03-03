@@ -77,7 +77,7 @@ class CppGenerator(CodeGenerator):
                 f'    }}\n'
                 f'}}\n'
                 f'\n'
-                f'#endif __HID_PAGE_{name.upper()}_H_\n'
+                f'#endif // __HID_PAGE_{name.upper()}_H_\n'
                 f'\n')
 
 """This file can be directly executed to perform code generation."""
