@@ -97,15 +97,15 @@ class CodeGenerator(metaclass=ABCMeta):
                 file.write(cls.header(page_name))
                 if len(page.usages) == 0:
                     # empty page
-                    file.write(cls.numeric(page_name, page.id, 0))
+                    file.write(cls.numeric(page, page_name, 0))
                 elif len(page.usages) == 1 and page.usages[0].id_count() == 0xffff:
                     # special optimization for simple numeric usage pages:
                     # only consider 1-255 as useful range
-                    file.write(cls.numeric(page_name, page.id, 0xff))
+                    file.write(cls.numeric(page, page_name, 0xff))
                 else:
                     # enum style page
                     max_usage = page.usages[-1].id_range()[-1]
-                    file.write(cls.enum_begin(page_name, page.id, max_usage))
+                    file.write(cls.enum_begin(page, page_name, max_usage))
                     table = dict()
                     excludes = set()
                     excludes.add(None)
@@ -130,10 +130,10 @@ class CodeGenerator(metaclass=ABCMeta):
                         name = table[id][0]
                         usage_name = table[id][1]
                         if usage_name not in excludes:
-                            file.write(cls.enum_entry(usage_name, id))
+                            file.write(cls.enum_entry(page_name, usage_name, id))
                         else:
                             # if not valid, print a comment instead
-                            file.write(cls.enum_comment_entry(name, id))
+                            file.write(cls.enum_comment_entry(page_name, name, id))
 
                 file.write(cls.footer(page_name))
         return
@@ -158,24 +158,24 @@ class CodeGenerator(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def numeric(cls, page_name, page_id, max_usage = 0xff):
+    def numeric(cls, page, page_name, max_usage = 0xff):
         """Format for a purely numeric usage page (single usage primitive for the entire page)."""
         pass
 
     @classmethod
     @abstractmethod
-    def enum_begin(cls, page_name, page_id, max_usage):
+    def enum_begin(cls, page, page_name, max_usage):
         """Start of an enumeration style usage page."""
         pass
 
     @classmethod
     @abstractmethod
-    def enum_entry(cls, usage_name, id):
+    def enum_entry(cls, page_name, usage_name, id):
         """One valid enumeration usage entry."""
         pass
 
     @classmethod
     @abstractmethod
-    def enum_comment_entry(cls, usage_name, id):
+    def enum_comment_entry(cls, page_name, usage_name, id):
         """One invalid enumeration usage entry, as comment."""
         pass

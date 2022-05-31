@@ -28,53 +28,61 @@ class CppGenerator(CodeGenerator):
                 f'\n'
                 f'#include "hid/usage.h"\n'
                 f'\n'
-                f'namespace hid\n'
-                f'{{\n'
-                f'    namespace page\n'
+                f'namespace hid::page\n'
+                f'{{\n')
+
+    @classmethod
+    def numeric(cls, page, name, max_usage):
+        return (f'    class {name.lower()};\n'
+                f'    template<>\n'
+                f'    struct info<{name.lower()}>\n'
+                f'    {{\n'
+                f'        constexpr static usage_id_type base_id = 0x{page.id << 16:08x};\n'
+                f'        constexpr static usage_id_type max_usage = 0x{max_usage:04x} | base_id;\n'
+                f'        constexpr static const char* name = "{page.description}";\n'
+                f'    }};\n'
+                f'    class {name.lower()}\n'
+                f'    {{\n'
+                f'    public:\n'
+                f'        constexpr operator usage_id_type&()\n'
+                f'        {{\n'
+                f'            return id;\n'
+                f'        }}\n'
+                f'        constexpr operator usage_id_type() const\n'
+                f'        {{\n'
+                f'            return id;\n'
+                f'        }}\n'
+                f'        constexpr {name.lower()}(usage_index_type value)\n'
+                f'            : id((value & USAGE_INDEX_MASK) | info<{name.lower()}>::base_id)\n'
+                f'        {{\n'
+                f'        }}\n'
+                f'    private:\n'
+                f'        usage_id_type id;\n')
+
+    @classmethod
+    def enum_begin(cls, page, name, max_usage):
+        return (f'    enum class {name.lower()} : usage_id_type;\n'
+                f'    template<>\n'
+                f'    struct info<{name.lower()}>\n'
+                f'    {{\n'
+                f'        constexpr static usage_id_type base_id = 0x{page.id << 16:08x};\n'
+                f'        constexpr static usage_id_type max_usage = 0x{max_usage:04x} | base_id;\n'
+                f'        constexpr static const char* name = "{page.description}";\n'
+                f'    }};\n'
+                f'    enum class {name.lower()} : usage_id_type\n'
                 f'    {{\n')
 
     @classmethod
-    def numeric(cls, name, page_id, max_usage):
-        return (f'        class {name.lower()}\n'
-                f'        {{\n'
-                f'        public:\n'
-                f'            constexpr operator usage_id_type&()\n'
-                f'            {{\n'
-                f'                return id;\n'
-                f'            }}\n'
-                f'            constexpr operator usage_id_type() const\n'
-                f'            {{\n'
-                f'                return id;\n'
-                f'            }}\n'
-                f'            constexpr static usage_id_type PAGE_ID = 0x{page_id << 16:08x};\n'
-                f'            constexpr static usage_id_type MAX_USAGE = 0x{max_usage:04x} | PAGE_ID;\n'
-                f'            constexpr {name.lower()}(usage_index_type value)\n'
-                f'                : id((value & USAGE_INDEX_MASK) | PAGE_ID)\n'
-                f'            {{\n'
-                f'            }}\n'
-                f'        private:\n'
-                f'            usage_id_type id;\n')
+    def enum_entry(cls, name, usage_name, id):
+        return (f'        {usage_name.upper()} = 0x{id:04x} | info<{name.lower()}>::base_id,\n')
 
     @classmethod
-    def enum_begin(cls, name, page_id, max_usage):
-        return (f'        enum class {name.lower()} : usage_id_type\n'
-                f'        {{\n'
-                f'            PAGE_ID = 0x{page_id << 16:08x},\n'
-                f'            MAX_USAGE = 0x{max_usage:04x} | static_cast<usage_id_type>(PAGE_ID),\n'
-                f'\n')
-
-    @classmethod
-    def enum_entry(cls, usage_name, id):
-        return (f'            {usage_name.upper()} = 0x{id:04x} | static_cast<usage_id_type>(PAGE_ID),\n')
-
-    @classmethod
-    def enum_comment_entry(cls, usage_name, id):
-        return (f'            // "{usage_name.upper()}" = 0x{id:04x},\n')
+    def enum_comment_entry(cls, name, usage_name, id):
+        return (f'        // "{usage_name.upper()}" = 0x{id:04x} | info<{name.lower()}>::base_id,\n')
 
     @classmethod
     def footer(cls, name):
-        return (f'        }};\n'
-                f'    }}\n'
+        return (f'    }};\n'
                 f'}}\n'
                 f'\n'
                 f'#endif // __HID_PAGE_{name.upper()}_H_\n'
