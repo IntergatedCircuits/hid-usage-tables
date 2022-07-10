@@ -1,0 +1,12 @@
+0011 "SoC"
+
+01 CA "SoC Control"
+02 CL "Firmware Transfer"
+03 DV "Firmware File Id"
+04 DV "File Offset In Bytes"
+05 DV "File Transfer Size Max In Bytes"
+06 DV "File Payload"
+07 DV "File Payload Size In Bytes"
+08 DF "File Payload Contains Last Bytes"
+09 DF "File Transfer Stop"
+0A DF "File Transfer Till End"
