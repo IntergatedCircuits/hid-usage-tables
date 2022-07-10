@@ -1,6 +1,6 @@
-000f "Physical Interface Device"
+000f "Physical Interput Device"
 
-01 CA "Physical Interface Device"
+01 CA "Physical Input Device"
 
 20 DV "Normal"
 21 CL "Set Effect Report"
