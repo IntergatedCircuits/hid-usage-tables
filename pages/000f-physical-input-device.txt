@@ -1,4 +1,4 @@
-000f "Physical Interput Device"
+000f "Physical Input Device"
 
 01 CA "Physical Input Device"
 
