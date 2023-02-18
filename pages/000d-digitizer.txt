@@ -96,3 +96,5 @@ a3 Sel "Switch Disabled"
 a4 Sel "Switch Unimplemented"
 a5 CL "Transducer Switches"
 a6 DV "Transducer Index Selector"
+
+b0 DV "Button Press Threshold"
