@@ -86,5 +86,7 @@
 54 DV "Green LED Channel"
 55 DV "Blue LED Channel"
 56 DV "LED Intensity"
+57 OOC "System Microphone Mute"
+
 60 NAry(61:68) "Player Indicator"
 61:68 Sel "Player {n+1}"

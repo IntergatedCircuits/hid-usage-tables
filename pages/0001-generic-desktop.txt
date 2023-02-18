@@ -88,6 +88,7 @@ a5 OSC "Application Break"
 a6 OSC "Application Debugger Break"
 a7 OSC "System Speaker Mute"
 a8 OSC "System Hibernate"
+a9 OOC "System Microphone Mute"
 
 b0 OSC "System Display Invert"
 b1 OSC "System Display Internal"
