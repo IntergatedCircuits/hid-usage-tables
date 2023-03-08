@@ -6,9 +6,9 @@ and generate code for different programming languages.
 
 ## Supported formats
 
-* C++ (to be used with [hid-rdf][hid-rdf])
+* C++ (to be used with [hid-rp][hid-rp])
 
 Additional languages can be easily added by taking `src/hid/codegen/cpp.py` as a template.
 
 [HUT]: https://www.usb.org/sites/default/files/hut1_22.pdf
-[hid-rdf]: https://github.com/IntergatedCircuits/hid-rdf
+[hid-rp]: https://github.com/IntergatedCircuits/hid-rp
