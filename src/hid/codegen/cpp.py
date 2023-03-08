@@ -19,14 +19,14 @@ class CppGenerator(CodeGenerator):
 
     @classmethod
     def page_filename(cls, page_name):
-        return f'{page_name.lower()}.h'
+        return f'{page_name.lower()}.hpp'
 
     @classmethod
     def header(cls, name):
-        return (f'#ifndef __HID_PAGE_{name.upper()}_H_\n'
-                f'#define __HID_PAGE_{name.upper()}_H_\n'
+        return (f'#ifndef __HID_PAGE_{name.upper()}_HPP_\n'
+                f'#define __HID_PAGE_{name.upper()}_HPP_\n'
                 f'\n'
-                f'#include "hid/usage.h"\n'
+                f'#include "hid/usage.hpp"\n'
                 f'\n'
                 f'namespace hid::page\n'
                 f'{{\n')
@@ -85,7 +85,7 @@ class CppGenerator(CodeGenerator):
         return (f'    }};\n'
                 f'}}\n'
                 f'\n'
-                f'#endif // __HID_PAGE_{name.upper()}_H_\n'
+                f'#endif // __HID_PAGE_{name.upper()}_HPP_\n'
                 f'\n')
 
 """This file can be directly executed to perform code generation."""
