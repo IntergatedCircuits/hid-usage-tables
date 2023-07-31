@@ -36,6 +36,12 @@ class HidUsageType(Enum):
     BUFFERED_BYTES = 'BB' # no static meaning, data stream
     INLINE_USAGE_SWITCH = 'IUS' # the value of the Modifier is OR-ed in to the top 4 bits of the un-modified Usage ID
 
+    @classmethod
+    def _missing_(cls, value):
+        if value == 'BufferedBytes':
+            return cls.BUFFERED_BYTES
+        return None
+
 def check_id(id):
     if not (id > 0 and id < 0x10000):
         raise HidUsageError('Invalid usage ID')

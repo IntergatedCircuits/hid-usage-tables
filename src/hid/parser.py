@@ -8,11 +8,14 @@ copyright:
 from hid.types import *
 import re
 import os
+import json
 
 class HidParserError(HidUsageError):
     """Failed to parse a line in file"""
     def __init__(self, filepath, line):
         super().__init__('HID usage parsing error in file ' + filename + ' (line="' + line + '")')
+    def __init__(self, page):
+        super().__init__('HID usage parsing error in page ' + page.name())
 
 def parse_types(typestr):
     """Parses the types string into a list of HidUsageType"""
@@ -129,5 +132,51 @@ def parse_database(pages_path=os.path.abspath(os.path.join(os.path.dirname(os.pa
         except HidParserError as ex:
             print(ex)
             continue
+
+    return hid_pages
+
+def parse_json_page(page_obj):
+    """Parse an HID usage page from USB.org/HID document JSON format usage page object."""
+
+    # create this page
+    name = page_obj['Name']
+    page = HidPage(page_obj['Id'], name, name)
+
+    if page_obj['Kind'] == 'Defined':
+        # single IDs
+        for usage_obj in page_obj['UsageIds']:
+            types = [HidUsageType(t) for t in usage_obj['Kinds']]
+            id = usage_obj['Id']
+            usage = HidUsage(usage_obj['Name'], types, id)
+            page.add(usage)
+    elif page_obj['Kind'] == 'Generated':
+        # full range
+        gen_obj = page_obj['UsageIdGenerator']
+        types = [HidUsageType(t) for t in gen_obj['Kinds']]
+        id_min = gen_obj['StartUsageId']
+        id_max = gen_obj['EndUsageId']
+        usage = HidUsageRange(gen_obj['NamePrefix'], types, id_min, id_max)
+        page.add(usage)
+    else:
+        #unknown
+        raise HidParserError(page)
+
+    return page
+
+def parse_json(json_path):
+    """Parse HID usages from USB.org/HID document JSON attachment."""
+
+    hid_pages = list()
+
+    with open(json_path, mode='rt', encoding='utf-8') as file:
+        data = json.load(file)
+
+        for usage_page in data['UsagePages']:
+            try:
+                page = parse_json_page(usage_page)
+                hid_pages.append(page)
+            except HidParserError as ex:
+                print(ex)
+                continue
 
     return hid_pages
