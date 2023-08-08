@@ -80,9 +80,9 @@ a8 NAry() "Synchronization Type"
 
 aa NAry() "Screen Orientation"
 
-ac SV "Horizontal Frequency"
+ac DV "Horizontal Frequency"
 
-ae SV "Vertical Frequency"
+ae DV "Vertical Frequency"
 
 b0 NAry() "Settings"
 

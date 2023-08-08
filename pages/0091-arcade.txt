@@ -23,7 +23,7 @@
 45 DV "Alarm Input"
 46 OOC "Coin Door Counter"
 47 DV "I/O Direction Mapping"
-48 OOC "Set I/O Direction"
+48 DV "Set I/O Direction Mapping"
 49 DV "Extended Optical Input State"
 4a DV "Pin Pad Input State"
 4b DV "Pin Pad Status"

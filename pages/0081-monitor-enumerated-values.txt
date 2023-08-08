@@ -1,3 +1,0 @@
-0081 "Monitor Enumerated Values"
-
-0001:FFFF Sel "ENUM_{n}"

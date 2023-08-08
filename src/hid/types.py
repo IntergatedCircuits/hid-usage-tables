@@ -104,6 +104,8 @@ class HidUsageRange(HidUsagePrimitive):
 
     def name(self, id):
         """Generate the name of the usage."""
+        if id == None:
+            return self._name
         if id < self._id_min or id > self._id_max:
             raise HidUsageError('Invalid usage ID')
 

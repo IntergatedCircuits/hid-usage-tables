@@ -6,7 +6,7 @@
 
 20 CP "Point of View"
 21 DV "Turn Right/Left"
-22 DV "Pitch Right/Left"
+22 DV "Pitch Forward/Backward"
 23 DV "Roll Right/Left"
 24 DV "Move Right/Left"
 25 DV "Move Forward/Backward"

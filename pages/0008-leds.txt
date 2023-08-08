@@ -1,4 +1,4 @@
-0008 "LEDs"
+0008 "LED"
 
 01 OOC "Num Lock"
 02 OOC "Caps Lock"
@@ -30,7 +30,7 @@
 1c OOC "Battery OK"
 1d OOC "Battery Low"
 1e OOC "Speaker"
-1f OOC "Head Set"
+1f OOC "Headset"
 20 OOC "Hold"
 21 OOC "Microphone"
 22 OOC "Coverage"
@@ -83,8 +83,8 @@
 51 OOC "Warning Status"
 52 CL "RGB LED"
 53 DV "Red LED Channel"
-54 DV "Green LED Channel"
-55 DV "Blue LED Channel"
+54 DV "Blue LED Channel"
+55 DV "Green LED Channel"
 56 DV "LED Intensity"
 57 OOC "System Microphone Mute"
 

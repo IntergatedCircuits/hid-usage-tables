@@ -1,9 +1,9 @@
-008d "Weighing Devices"
+008d "Scales"
 
-01 CA "Weighing Device"
+01 CA "Scales"
 
-20 CL,NAry(21:2a) "Scale Device"
-21 Sel "Scale Class I Metric"
+20 CL "Scale Device"
+21 NAry(22:2a) "Scale Class"
 22 Sel "Scale Class I Metric"
 23 Sel "Scale Class II Metric"
 24 Sel "Scale Class III Metric"
@@ -41,7 +41,7 @@
 60 DV "Calibration Count"
 61 DV "Re-Zero Count"
 
-70 CL,NAry(71:78) "Scale Status"
+70 NAry(71:78) "Scale Status"
 71 Sel "Scale Status Fault"
 72 Sel "Scale Status Stable at Center of Zero"
 73 Sel "Scale Status In Motion"

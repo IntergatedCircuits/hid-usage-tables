@@ -1,6 +1,6 @@
 0006 "Generic Device Controls"
 
-01 CA "Background Controls"
+01 CA "Background/Nonuser Controls"
 
 20 DV "Battery Strength"
 21 DV "Wireless Channel"

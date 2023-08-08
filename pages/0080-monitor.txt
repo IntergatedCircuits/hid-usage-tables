@@ -1,3 +1,6 @@
 0080 "Monitor"
 
 01 CA "Monitor Control"
+02 SV "EDID Information"
+03 SV "VDIF Information"
+04 SV "VESA Version"

@@ -1,5 +1,6 @@
-f1d0 "Fast IDentity Online Alliance"
+f1d0 "FIDO Alliance"
 
 01 CA "U2F Authenticator Device"
+
 20 DV "Input Report Data"
 21 DV "Output Report Data"

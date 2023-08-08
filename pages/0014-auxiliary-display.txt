@@ -2,6 +2,7 @@
 
 01 CA "Alphanumeric Display"
 02 CA "Auxiliary Display"
+
 20 CL "Display Attributes Report"
 21 SF "ASCII Character Set"
 22 SF "Data Read Back"
@@ -48,6 +49,7 @@
 4b OOC "Char Attr Enhance"
 4c OOC "Char Attr Underline"
 4d OOC "Char Attr Blink"
+
 80 SV "Bitmap Size X"
 81 SV "Bitmap Size Y"
 82 SV "Max Blit Size"
@@ -57,6 +59,7 @@
 86 SV "Palette Data Size"
 87 SV "Palette Data Offset"
 88 BB "Palette Data"
+
 8a CL "Blit Report"
 8b SV "Blit Rectangle X1"
 8c SV "Blit Rectangle Y1"

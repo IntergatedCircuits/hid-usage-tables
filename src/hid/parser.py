@@ -116,7 +116,10 @@ def parse_page(filepath, shortname):
 
     return page
 
-def parse_database(pages_path=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../pages'))):
+def local_database_path():
+    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../pages'))
+
+def parse_database(pages_path=local_database_path()):
     """Parse all HID page files on the path"""
     filename_regex = re.compile('(?P<id>[0-9a-fA-F]{4})\-(?P<name>[a-zA-Z0-9_\-]*)\.txt')
 

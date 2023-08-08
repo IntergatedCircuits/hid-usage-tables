@@ -1,4 +1,4 @@
-0040 "Medical Instruments"
+0040 "Medical Instrument"
 
 01 CA "Medical Ultrasound"
 
@@ -30,8 +30,8 @@
 85 LC "Color Doppler Adjust"
 86 OSC "Motion Mode Select"
 87 LC "Motion Mode Adjust"
-88 OSC "2D Mode Select"
-89 LC "2D Mode Adjust"
+88 OSC "2-D Mode Select"
+89 LC "2-D Mode Adjust"
 
 a0 OSC "Soft Control Select"
 a1 LC "Soft Control Adjust"
