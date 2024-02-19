@@ -34,51 +34,40 @@ class CppGenerator(CodeGenerator):
     @classmethod
     def numeric(cls, page, name, max_usage):
         return (f'    class {name.lower()};\n'
-                f'    template<>\n'
+                f'    template <>\n'
                 f'    struct info<{name.lower()}>\n'
                 f'    {{\n'
-                f'        constexpr static usage_id_type base_id = 0x{page.id << 16:08x};\n'
-                f'        constexpr static usage_id_type max_usage = 0x{max_usage:04x} | base_id;\n'
+                f'        constexpr static page_id_t page_id = 0x{page.id:04x};\n'
                 f'        constexpr static const char* name = "{page.description}";\n'
                 f'    }};\n'
                 f'    class {name.lower()}\n'
                 f'    {{\n'
                 f'    public:\n'
-                f'        constexpr operator usage_id_type&()\n'
-                f'        {{\n'
-                f'            return id;\n'
-                f'        }}\n'
-                f'        constexpr operator usage_id_type() const\n'
-                f'        {{\n'
-                f'            return id;\n'
-                f'        }}\n'
-                f'        constexpr {name.lower()}(usage_index_type value)\n'
-                f'            : id((value & USAGE_INDEX_MASK) | info<{name.lower()}>::base_id)\n'
-                f'        {{\n'
-                f'        }}\n'
-                f'    private:\n'
-                f'        usage_id_type id;\n')
+                f'        constexpr operator usage_id_t() const {{ return id; }}\n'
+                f'        constexpr {name.lower()}(std::uint8_t value)\n'
+                f'            : id(value)\n'
+                f'        {{}}\n'
+                f'        std::uint8_t id{{}};\n')
 
     @classmethod
     def enum_begin(cls, page, name, max_usage):
-        return (f'    enum class {name.lower()} : usage_id_type;\n'
-                f'    template<>\n'
+        return (f'    enum class {name.lower()} : {"std::uint8_t" if max_usage < 256 else "std::uint16_t"};\n'
+                f'    template <>\n'
                 f'    struct info<{name.lower()}>\n'
                 f'    {{\n'
-                f'        constexpr static usage_id_type base_id = 0x{page.id << 16:08x};\n'
-                f'        constexpr static usage_id_type max_usage = 0x{max_usage:04x} | base_id;\n'
+                f'        constexpr static page_id_t page_id = 0x{page.id:04x};\n'
                 f'        constexpr static const char* name = "{page.description}";\n'
                 f'    }};\n'
-                f'    enum class {name.lower()} : usage_id_type\n'
+                f'    enum class {name.lower()} : {"std::uint8_t" if max_usage < 256 else "std::uint16_t"}\n'
                 f'    {{\n')
 
     @classmethod
     def enum_entry(cls, name, usage_name, id):
-        return (f'        {usage_name.upper()} = 0x{id:04x} | info<{name.lower()}>::base_id,\n')
+        return (f'        {usage_name.upper()} = 0x{id:04x},\n')
 
     @classmethod
     def enum_comment_entry(cls, name, usage_name, id):
-        return (f'        // "{usage_name.upper()}" = 0x{id:04x} | info<{name.lower()}>::base_id,\n')
+        return (f'        // "{usage_name.upper()}" = 0x{id:04x},\n')
 
     @classmethod
     def footer(cls, name):

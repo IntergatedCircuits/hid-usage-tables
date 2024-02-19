@@ -7,60 +7,16 @@ copyright:
          https://mozilla.org/MPL/2.0/."""
 import re
 from abc import ABCMeta, abstractmethod
-import unicodedata # name()
 
 class CodeGenerator(metaclass=ABCMeta):
     """Abstract class for code generation."""
 
     @classmethod
-    def sub_spec_chars(cls, name):
-        """ Find list of special characters at the beginning and end of the name
-        (followed by whitespace), and replace those with their whitespace-separated
-        unicodedata.name() equivalent"""
-
-        spec_chars_regex = re.compile(r'''
-            (?P<begin1>[^a-zA-Z0-9\s]+)(?P<core1>\s+(?:.*?\s+)?)(?P<end1>[^a-zA-Z0-9\s]+)
-            |
-            (?P<begin2>[^a-zA-Z0-9\s]+)(?P<core2>\s+.*)?
-            |
-            (?P<core3>.*?\s+)(?P<end3>[^a-zA-Z0-9\s]+)
-            ''', re.VERBOSE)
-
-        match = spec_chars_regex.fullmatch(name)
-        if match == None:
-            return name
-
-        begin = ''
-        core = ''
-        end = ''
-        if match.group('end3') != None:
-            core = match.expand('\g<core3>')
-            end = match.group('end3')
-        elif match.group('begin2') != None:
-            begin = match.group('begin2')
-            core = match.expand('\g<core2>')
-        else:
-            begin = match.group('begin1')
-            core = match.expand('\g<core1>')
-            end = match.group('end1')
-
-        b = ''
-        e = ''
-        for c in begin:
-            b += unicodedata.name(c) + ' '
-        for c in end:
-            e += unicodedata.name(c) + ' '
-        result = b.rstrip() + core + e.rstrip()
-        return result
-
-    @classmethod
     def str_to_identifier(cls, name):
         """Converts any string to a valid identifier in programming languages."""
 
-        id = cls.sub_spec_chars(name)
-
         # replace all non-supported characters to whitespace
-        id = re.sub('[^\w_]+', ' ', id)
+        id = re.sub('[^a-zA-Z0-9]', ' ', name)
         # replace any section of whitespaces with underscore
         id = re.sub('[\s]+', '_', id)
         # remove leading and trailing underscores
@@ -71,11 +27,6 @@ class CodeGenerator(metaclass=ABCMeta):
 
         # convert to uppercase
         id = id.upper()
-
-        # if all parts are the same, keep only one part
-        ids = id.split('_')
-        if len(ids) > 1 and ids.count(ids[0]) == len(ids):
-            id = ids[0]
 
         if id[0].isdigit():
             # digits are only not allowed as first character
