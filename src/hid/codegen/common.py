@@ -16,9 +16,9 @@ class CodeGenerator(metaclass=ABCMeta):
         """Converts any string to a valid identifier in programming languages."""
 
         # replace all non-supported characters to whitespace
-        id = re.sub('[^a-zA-Z0-9]', ' ', name)
+        id = re.sub(r'[^a-zA-Z0-9]', ' ', name)
         # replace any section of whitespaces with underscore
-        id = re.sub('[\s]+', '_', id)
+        id = re.sub(r'[\s]+', '_', id)
         # remove leading and trailing underscores
         id = id.strip('_')
         if len(id) == 0:

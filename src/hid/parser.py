@@ -31,7 +31,7 @@ def parse_types(typestr):
 
 def parse_page(filepath, shortname):
     """Parses an HID usage page text file into HidPage"""
-    page_regex = re.compile('(?P<id>[0-9a-fA-F]{4}) "(?P<name>.*)"\s*')
+    page_regex = re.compile(r'(?P<id>[0-9a-fA-F]{4}) "(?P<name>.*)"\s*')
 
     single_usage_regex = re.compile(r'''
         (?P<id>[0-9a-fA-F]{2,8}?)[ ]
@@ -121,7 +121,7 @@ def local_database_path():
 
 def parse_database(pages_path=local_database_path()):
     """Parse all HID page files on the path"""
-    filename_regex = re.compile('(?P<id>[0-9a-fA-F]{4})\-(?P<name>[a-zA-Z0-9_\-]*)\.txt')
+    filename_regex = re.compile(r'(?P<id>[0-9a-fA-F]{4})\-(?P<name>[a-zA-Z0-9_\-]*)\.txt')
 
     hid_pages = list()
     for filename in os.listdir(pages_path):

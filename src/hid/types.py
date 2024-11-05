@@ -109,7 +109,7 @@ class HidUsageRange(HidUsagePrimitive):
         if id < self._id_min or id > self._id_max:
             raise HidUsageError('Invalid usage ID')
 
-        _name_calc_regex = re.compile('([^{}]*)[{]([-+*/n0-9 ]+)[}]([^{}]*)')
+        _name_calc_regex = re.compile(r'([^{}]*)[{]([-+*/n0-9 ]+)[}]([^{}]*)')
         # the name shall contain a {} enclosed expression that can be evaluated by substituting n with index
         match = _name_calc_regex.fullmatch(self._name)
         if match != None:
