@@ -12,10 +12,11 @@ import json
 
 class HidParserError(HidUsageError):
     """Failed to parse a line in file"""
-    def __init__(self, filepath, line):
-        super().__init__('HID usage parsing error in file ' + filename + ' (line="' + line + '")')
-    def __init__(self, page):
-        super().__init__('HID usage parsing error in page ' + page.name())
+    def __init__(self, filepath=None, line=None, page=None):
+        if (filepath is not None):
+            super().__init__('HID usage parsing error in file ' + filepath + ' (line="' + line + '")')
+        else:
+            super().__init__('HID usage parsing error in page ' + page.name())
 
 def parse_types(typestr):
     """Parses the types string into a list of HidUsageType"""
@@ -68,7 +69,7 @@ def parse_page(filepath, shortname):
         line = file.readline()
         match = page_regex.fullmatch(line)
         if match == None:
-            raise HidParserError(filepath, line)
+            raise HidParserError(filepath=filepath, line=line)
 
         # create this page
         page = HidPage(int(match.group('id'), 16), shortname, match.group('name'))
@@ -112,7 +113,7 @@ def parse_page(filepath, shortname):
                 continue
 
             #unknown field
-            raise HidParserError(filepath, line)
+            raise HidParserError(filepath=filepath, line=line)
 
     return page
 
@@ -162,7 +163,7 @@ def parse_json_page(page_obj):
         page.add(usage)
     else:
         #unknown
-        raise HidParserError(page)
+        raise HidParserError(page=page)
 
     return page
 
