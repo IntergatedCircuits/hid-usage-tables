@@ -5,19 +5,24 @@ copyright:
          This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
          If a copy of the MPL was not distributed with this file, You can obtain one at
          https://mozilla.org/MPL/2.0/."""
-from hid.types import *
+from hid.types import HidUsageError, HidUsageType, HidUsage, HidUsageRange, HidPage
 import re
 import os
 import json
 
 class HidParserError(HidUsageError):
     """Failed to parse a line in file"""
-    def __init__(self, filepath, line):
-        super().__init__('HID usage parsing error in file ' + filename + ' (line="' + line + '")')
-    def __init__(self, page):
-        super().__init__('HID usage parsing error in page ' + page.name())
+    def __init__(self, page : HidPage, filepath : str = None, line : int = None):
+        msg = 'HID usage parsing error'
+        if page is not None:
+            msg += f' on page {page.name}'
+        if filepath is not None:
+            msg += f', in file {filepath}'
+            if line is not None:
+                msg += f' (line={line})'
+        super().__init__(msg)
 
-def parse_types(typestr):
+def parse_types(typestr : str) -> list:
     """Parses the types string into a list of HidUsageType"""
 
     # get rid of NAry value range
@@ -29,7 +34,7 @@ def parse_types(typestr):
     # lookup in enum table
     return [HidUsageType(t) for t in typesaslist]
 
-def parse_page(filepath, shortname):
+def parse_page(filepath : str, shortname : str) -> HidPage:
     """Parses an HID usage page text file into HidPage"""
     page_regex = re.compile(r'(?P<id>[0-9a-fA-F]{4}) "(?P<name>.*)"\s*')
 
@@ -67,8 +72,8 @@ def parse_page(filepath, shortname):
         # first line is the id and name of the page
         line = file.readline()
         match = page_regex.fullmatch(line)
-        if match == None:
-            raise HidParserError(filepath, line)
+        if match is None:
+            raise HidParserError(page, filepath, line)
 
         # create this page
         page = HidPage(int(match.group('id'), 16), shortname, match.group('name'))
@@ -83,7 +88,7 @@ def parse_page(filepath, shortname):
 
             # try to identify as single usage
             match = single_usage_regex.fullmatch(line)
-            if match != None:
+            if match is not None:
                 types = parse_types(match.group('types'))
                 id = int(match.group('id'), 16)
                 if id > 0xffff:
@@ -97,7 +102,7 @@ def parse_page(filepath, shortname):
 
             # try to identify as range usage
             match = range_usage_regex.fullmatch(line)
-            if match != None:
+            if match is not None:
                 types = parse_types(match.group('types'))
                 id_min = int(match.group('id_min'), 16)
                 id_max = int(match.group('id_max'), 16)
@@ -107,27 +112,27 @@ def parse_page(filepath, shortname):
 
             # in-id usage switch
             match = int_usage_switch_regex.fullmatch(line)
-            if match != None:
+            if match is not None:
                 # TODO: create usage primitive specialization
                 continue
 
             #unknown field
-            raise HidParserError(filepath, line)
+            raise HidParserError(page, filepath, line)
 
     return page
 
-def local_database_path():
+def local_database_path() -> str:
     return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../pages'))
 
-def parse_database(pages_path=local_database_path()):
+def parse_database(pages_path : str = local_database_path()):
     """Parse all HID page files on the path"""
     filename_regex = re.compile(r'(?P<id>[0-9a-fA-F]{4})\-(?P<name>[a-zA-Z0-9_\-]*)\.txt')
 
     hid_pages = list()
     for filename in os.listdir(pages_path):
         match = filename_regex.fullmatch(filename)
-        if (match == None):
-            print('File "' + filename + '" not recognized as HID page document')
+        if (match is None):
+            print(f'File "{filename}" not recognized as HID page document')
             continue
         try:
             page = parse_page(os.path.join(pages_path, filename), match.group('name'))
@@ -138,7 +143,7 @@ def parse_database(pages_path=local_database_path()):
 
     return hid_pages
 
-def parse_json_page(page_obj):
+def parse_json_page(page_obj : dict) -> HidPage:
     """Parse an HID usage page from USB.org/HID document JSON format usage page object."""
 
     # create this page
@@ -166,7 +171,7 @@ def parse_json_page(page_obj):
 
     return page
 
-def parse_json(json_path):
+def parse_json(json_path : str) -> list:
     """Parse HID usages from USB.org/HID document JSON attachment."""
 
     hid_pages = list()

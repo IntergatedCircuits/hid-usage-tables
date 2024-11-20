@@ -5,14 +5,15 @@ copyright:
          This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
          If a copy of the MPL was not distributed with this file, You can obtain one at
          https://mozilla.org/MPL/2.0/."""
-import sys, os
+import sys
+import os
 
 # add the current package to the path
 pkg_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../..'))
 sys.path.insert(0, pkg_path)
 
 from hid.parser import parse_database
-from hid.codegen.common import *
+from hid.codegen.common import CodeGenerator
 
 class CppGenerator(CodeGenerator):
     """Generate c++ header files from HID usage page database."""
@@ -81,7 +82,10 @@ class CppGenerator(CodeGenerator):
 
 """This file can be directly executed to perform code generation."""
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print('Usage: python3 cpp.py <output_path>')
+        sys.exit(1)
     out_path = os.path.abspath(sys.argv[1])
     hid_pages = parse_database()
     CppGenerator.generate(hid_pages, out_path)
-    print('Code generation to path "' + out_path + '" is complete.')
+    print(f'Code generation to path "{out_path}" is complete.')

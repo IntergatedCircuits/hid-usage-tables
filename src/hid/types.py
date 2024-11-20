@@ -42,32 +42,32 @@ class HidUsageType(Enum):
             return cls.BUFFERED_BYTES
         return None
 
-def check_id(id):
+def check_id(id : int):
     if not (id > 0 and id < 0x10000):
         raise HidUsageError('Invalid usage ID')
 
 class HidUsagePrimitive(metaclass=ABCMeta):
     """Base type for HID usage definitions"""
-    def __init__(self, name, types):
+    def __init__(self, name : str, types : list):
         self._name = name
         self._types = types
 
     @property
-    def types(self):
+    def types(self) -> list:
         """HidUsageType"""
         return self._types
 
     @abstractmethod
-    def id_count(self):
+    def id_count(self) -> int:
         """The number of usages covered by this primitive"""
         pass
 
     @abstractmethod
-    def id_range(self):
+    def id_range(self) -> range:
         """The range of IDs"""
         pass
 
-    def name(self, id):
+    def name(self, id : int) -> str:
         """Get the name of the usage by ID."""
         return self._name
 
@@ -78,10 +78,10 @@ class HidUsage(HidUsagePrimitive):
         check_id(id)
         self._id = id
 
-    def id_count(self):
+    def id_count(self) -> int:
         return 1
 
-    def id_range(self):
+    def id_range(self) -> range:
         # range end is invalid
         return range(self._id, self._id + 1)
 
@@ -94,17 +94,17 @@ class HidUsageRange(HidUsagePrimitive):
         self._id_min = id_min
         self._id_max = id_max
 
-    def id_count(self):
+    def id_count(self) -> int:
         """The number of usages covered by this primitive"""
         return 1 + self._id_max - self._id_min
 
-    def id_range(self):
+    def id_range(self) -> range:
         # range end is invalid
         return range(self._id_min, self._id_max + 1)
 
-    def name(self, id):
+    def name(self, id : int):
         """Generate the name of the usage."""
-        if id == None:
+        if id is None:
             return self._name
         if id < self._id_min or id > self._id_max:
             raise HidUsageError('Invalid usage ID')
@@ -112,7 +112,8 @@ class HidUsageRange(HidUsagePrimitive):
         _name_calc_regex = re.compile(r'([^{}]*)[{]([-+*/n0-9 ]+)[}]([^{}]*)')
         # the name shall contain a {} enclosed expression that can be evaluated by substituting n with index
         match = _name_calc_regex.fullmatch(self._name)
-        if match != None:
+        if match is not None:
+            # this variable is used in the eval() call
             n = id - self._id_min
             s = match.group(1) + str(eval(match.group(2))) + match.group(3)
             return s
@@ -121,7 +122,7 @@ class HidUsageRange(HidUsagePrimitive):
 
 class HidPage():
     """HID usage page"""
-    def __init__(self, id, name, description):
+    def __init__(self, id : int, name : str, description : str):
         check_id(id)
         self._id = id
         self._name = name
@@ -129,15 +130,15 @@ class HidPage():
         self._usages = list()
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def description(self):
+    def description(self) -> str:
         return self._desc
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self._id
 
     def add(self, primitive):
@@ -145,5 +146,5 @@ class HidPage():
         self._usages.append(primitive)
 
     @property
-    def usages(self):
+    def usages(self) -> list:
         return self._usages

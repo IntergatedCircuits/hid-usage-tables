@@ -30,12 +30,13 @@ class CodeGenerator(metaclass=ABCMeta):
 
         if id[0].isdigit():
             # digits are only not allowed as first character
-            id = '_' + id;
+            id = '_' + id
         return id
 
     @classmethod
     def generate(cls, hid_pages, dest_path):
-        import os, shutil
+        import os
+        import shutil
         # delete previous generation
         if os.path.exists(dest_path):
             shutil.rmtree(dest_path)
