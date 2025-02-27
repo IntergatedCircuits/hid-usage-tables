@@ -47,7 +47,7 @@ class CppGenerator(CodeGenerator):
                 f'    {{\n'
                 f'    public:\n'
                 f'        constexpr operator usage_id_t() const {{ return id; }}\n'
-                f'        constexpr {name.lower()}({value_type} value)\n'
+                f'        explicit constexpr {name.lower()}({value_type} value)\n'
                 f'            : id(value)\n'
                 f'        {{}}\n'
                 f'        {value_type} id{{}};\n')
