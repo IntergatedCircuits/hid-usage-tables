@@ -34,6 +34,7 @@ class CppGenerator(CodeGenerator):
 
     @classmethod
     def numeric(cls, page, name, max_usage):
+        value_type = 'std::uint8_t' if max_usage < 256 else 'std::uint16_t'
         return (f'    class {name.lower()};\n'
                 f'    template <>\n'
                 f'    struct info<{name.lower()}>\n'
@@ -46,10 +47,10 @@ class CppGenerator(CodeGenerator):
                 f'    {{\n'
                 f'    public:\n'
                 f'        constexpr operator usage_id_t() const {{ return id; }}\n'
-                f'        constexpr {name.lower()}(std::uint8_t value)\n'
+                f'        constexpr {name.lower()}({value_type} value)\n'
                 f'            : id(value)\n'
                 f'        {{}}\n'
-                f'        std::uint8_t id{{}};\n')
+                f'        {value_type} id{{}};\n')
 
     @classmethod
     def enum_begin(cls, page, name, max_usage):

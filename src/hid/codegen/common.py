@@ -51,9 +51,7 @@ class CodeGenerator(metaclass=ABCMeta):
                     # empty page
                     file.write(cls.numeric(page, page_name, 0))
                 elif len(page.usages) == 1 and page.usages[0].id_count() == 0xffff:
-                    # special optimization for simple numeric usage pages:
-                    # only consider 1-255 as useful range
-                    file.write(cls.numeric(page, page_name, 0xff))
+                    file.write(cls.numeric(page, page_name, page.usages[0].id_count()))
                 else:
                     # enum style page
                     max_usage = page.usages[-1].id_range()[-1]
