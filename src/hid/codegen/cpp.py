@@ -1,6 +1,6 @@
 """
 author:  Benedek Kupper
-date:    2021
+date:    2025
 copyright:
          This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
          If a copy of the MPL was not distributed with this file, You can obtain one at
@@ -13,17 +13,15 @@ pkg_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__
 sys.path.insert(0, pkg_path)
 
 from hid.parser import parse_database
-from hid.codegen.common import CodeGenerator
+from hid.codegen.common import CodeBuilder, CodeDirector, string_to_identifier
 
-class CppGenerator(CodeGenerator):
+class CppBuilder(CodeBuilder):
     """Generate c++ header files from HID usage page database."""
 
-    @classmethod
-    def page_filename(cls, page_name):
+    def page_filename(self, page_name):
         return f'{page_name.lower()}.hpp'
 
-    @classmethod
-    def header(cls, name):
+    def header(self, name):
         return (f'#ifndef __HID_PAGE_{name.upper()}_HPP_\n'
                 f'#define __HID_PAGE_{name.upper()}_HPP_\n'
                 f'\n'
@@ -32,8 +30,7 @@ class CppGenerator(CodeGenerator):
                 f'namespace hid::page\n'
                 f'{{\n')
 
-    @classmethod
-    def numeric(cls, page, name, max_usage):
+    def numeric(self, page, name, max_usage):
         value_type = 'std::uint8_t' if max_usage < 256 else 'std::uint16_t'
         return (f'    class {name.lower()};\n'
                 f'    template <>\n'
@@ -52,8 +49,7 @@ class CppGenerator(CodeGenerator):
                 f'        {{}}\n'
                 f'        {value_type} id{{}};\n')
 
-    @classmethod
-    def enum_begin(cls, page, name, max_usage):
+    def enum_begin(self, page, name, max_usage):
         return (f'    enum class {name.lower()} : {"std::uint8_t" if max_usage < 256 else "std::uint16_t"};\n'
                 f'    template <>\n'
                 f'    struct info<{name.lower()}>\n'
@@ -65,16 +61,13 @@ class CppGenerator(CodeGenerator):
                 f'    enum class {name.lower()} : {"std::uint8_t" if max_usage < 256 else "std::uint16_t"}\n'
                 f'    {{\n')
 
-    @classmethod
-    def enum_entry(cls, name, usage_name, id):
+    def enum_entry(self, name, usage_name, id):
         return (f'        {usage_name.upper()} = 0x{id:04x},\n')
 
-    @classmethod
-    def enum_comment_entry(cls, name, usage_name, id):
+    def enum_comment_entry(self, name, usage_name, id):
         return (f'        // "{usage_name.upper()}" = 0x{id:04x},\n')
 
-    @classmethod
-    def footer(cls, name):
+    def footer(self, name):
         return (f'    }};\n'
                 f'}}\n'
                 f'\n'
@@ -88,5 +81,5 @@ if __name__ == "__main__":
         sys.exit(1)
     out_path = os.path.abspath(sys.argv[1])
     hid_pages = parse_database()
-    CppGenerator.generate(hid_pages, out_path)
+    CodeDirector(CppBuilder(), string_to_identifier).generate(hid_pages, out_path)
     print(f'Code generation to path "{out_path}" is complete.')
