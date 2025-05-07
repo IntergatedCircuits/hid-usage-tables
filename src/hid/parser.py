@@ -5,10 +5,10 @@ copyright:
          This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
          If a copy of the MPL was not distributed with this file, You can obtain one at
          https://mozilla.org/MPL/2.0/."""
-from hid.types import HidUsageError, HidUsageType, HidUsage, HidUsageRange, HidPage
 import re
 import os
 import json
+from hid.types import HidUsageError, HidUsageType, HidUsage, HidUsageRange, HidPage
 
 class HidParserError(HidUsageError):
     """Failed to parse a line in file"""
@@ -90,13 +90,13 @@ def parse_page(filepath : str, shortname : str) -> HidPage:
             match = single_usage_regex.fullmatch(line)
             if match is not None:
                 types = parse_types(match.group('types'))
-                id = int(match.group('id'), 16)
-                if id > 0xffff:
+                uid = int(match.group('id'), 16)
+                if uid > 0xffff:
                     # Sel values that aren't mapped to valid usage ID
                     # TODO: store them in a separate container, generate separate enums
                     continue
 
-                usage = HidUsage(match.group('name'), types, id)
+                usage = HidUsage(match.group('name'), types, uid)
                 page.add(usage)
                 continue
 
@@ -128,7 +128,7 @@ def parse_database(pages_path : str = local_database_path()):
     """Parse all HID page files on the path"""
     filename_regex = re.compile(r'(?P<id>[0-9a-fA-F]{4})\-(?P<name>[a-zA-Z0-9_\-]*)\.txt')
 
-    hid_pages = list()
+    hid_pages = []
     for filename in os.listdir(pages_path):
         match = filename_regex.fullmatch(filename)
         if (match is None):
@@ -154,8 +154,8 @@ def parse_json_page(page_obj : dict) -> HidPage:
         # single IDs
         for usage_obj in page_obj['UsageIds']:
             types = [HidUsageType(t) for t in usage_obj['Kinds']]
-            id = usage_obj['Id']
-            usage = HidUsage(usage_obj['Name'], types, id)
+            uid = usage_obj['Id']
+            usage = HidUsage(usage_obj['Name'], types, uid)
             page.add(usage)
     elif page_obj['Kind'] == 'Generated':
         # full range
@@ -174,7 +174,7 @@ def parse_json_page(page_obj : dict) -> HidPage:
 def parse_json(json_path : str) -> list:
     """Parse HID usages from USB.org/HID document JSON attachment."""
 
-    hid_pages = list()
+    hid_pages = []
 
     with open(json_path, mode='rt', encoding='utf-8') as file:
         data = json.load(file)

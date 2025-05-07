@@ -8,10 +8,10 @@ copyright:
 from enum import Enum, unique
 from abc import ABCMeta, abstractmethod
 import re
+from ast import literal_eval
 
 class HidUsageError(Exception):
     """HID usage generic exception"""
-    pass
 
 @unique
 class HidUsageType(Enum):
@@ -42,8 +42,8 @@ class HidUsageType(Enum):
             return cls.BUFFERED_BYTES
         return None
 
-def check_id(id : int):
-    if not (id > 0 and id < 0x10000):
+def check_id(uid : int):
+    if not (uid > 0 and uid < 0x10000):
         raise HidUsageError('Invalid usage ID')
 
 class HidUsagePrimitive(metaclass=ABCMeta):
@@ -60,23 +60,21 @@ class HidUsagePrimitive(metaclass=ABCMeta):
     @abstractmethod
     def id_count(self) -> int:
         """The number of usages covered by this primitive"""
-        pass
 
     @abstractmethod
     def id_range(self) -> range:
         """The range of IDs"""
-        pass
 
-    def name(self, id : int) -> str:
+    def name(self, uid : int) -> str:
         """Get the name of the usage by ID."""
         return self._name
 
 class HidUsage(HidUsagePrimitive):
     """Single HID usage"""
-    def __init__(self, name, types, id):
+    def __init__(self, name, types, uid):
         super().__init__(name, types)
-        check_id(id)
-        self._id = id
+        check_id(uid)
+        self._id = uid
 
     def id_count(self) -> int:
         return 1
@@ -102,32 +100,33 @@ class HidUsageRange(HidUsagePrimitive):
         # range end is invalid
         return range(self._id_min, self._id_max + 1)
 
-    def name(self, id : int):
+    def name(self, uid : int):
         """Generate the name of the usage."""
-        if id is None:
+        if uid is None:
             return self._name
-        if id < self._id_min or id > self._id_max:
+        if uid < self._id_min or uid > self._id_max:
             raise HidUsageError('Invalid usage ID')
 
         _name_calc_regex = re.compile(r'([^{}]*)[{]([-+*/n0-9 ]+)[}]([^{}]*)')
-        # the name shall contain a {} enclosed expression that can be evaluated by substituting n with index
+        # the name shall contain a {} enclosed expression that can be evaluated
+        # by substituting n with index
         match = _name_calc_regex.fullmatch(self._name)
         if match is not None:
             # this variable is used in the eval() call
-            n = id - self._id_min
+            n = uid - self._id_min
             s = match.group(1) + str(eval(match.group(2))) + match.group(3)
             return s
-        else:
-            raise HidUsageError('HidUsageRange name format invalid')
+
+        raise HidUsageError('HidUsageRange name format invalid')
 
 class HidPage():
     """HID usage page"""
-    def __init__(self, id : int, name : str, description : str):
-        check_id(id)
-        self._id = id
+    def __init__(self, pid : int, name : str, description : str):
+        check_id(pid)
+        self._id = pid
         self._name = name
         self._desc = description
-        self._usages = list()
+        self._usages = []
 
     @property
     def name(self) -> str:
@@ -148,3 +147,16 @@ class HidPage():
     @property
     def usages(self) -> list:
         return self._usages
+
+    @property
+    def max_usage(self) -> int:
+        if len(self._usages) > 0:
+            return self._usages[-1].id_range()[-1]
+        return 0
+
+    def usage_ids_names(self) -> dict:
+        table = {}
+        for usage in self._usages:
+            for uid in usage.id_range():
+                table[uid] = usage.name(uid)
+        return table
