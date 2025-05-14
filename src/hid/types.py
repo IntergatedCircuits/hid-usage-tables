@@ -112,9 +112,12 @@ class HidUsageRange(HidUsagePrimitive):
         # by substituting n with index
         match = _name_calc_regex.fullmatch(self._name)
         if match is not None:
-            # this variable is used in the eval() call
-            n = uid - self._id_min
-            s = match.group(1) + str(eval(match.group(2))) + match.group(3)
+            allowed2eval = {
+                'n': uid - self._id_min,
+                '__builtins__': None,
+                'math': None,
+            }
+            s = match.group(1) + str(eval(match.group(2), allowed2eval)) + match.group(3)
             return s
 
         raise HidUsageError('HidUsageRange name format invalid')
