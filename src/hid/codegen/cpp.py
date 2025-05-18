@@ -47,7 +47,7 @@ class CppBuilder():
                 f'class {name.lower()}\n'
                  '{\n'
                  'public:\n'
-                 '    constexpr operator usage_id_t() const {{ return id; }}\n'
+                 '    constexpr operator usage_id_t() const { return id; }\n'
                 f'    explicit constexpr {name.lower()}({value_type} value)\n'
                  '        : id(value)\n'
                  '    {}\n'
