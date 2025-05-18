@@ -75,7 +75,7 @@ class CppBuilder():
                 f'{cases}'
                  '                    default:     return (const char*)nullptr;\n'
                  '                    }\n'
-                 '                });\n'
+                f'                }}, 0x{page.ius_mask:04x});\n'
                  '}\n'
                 f'enum class {name.lower()} : {value_type}\n'
                  '{\n'

@@ -43,7 +43,7 @@ class HidUsageType(Enum):
         return None
 
 def check_id(uid : int):
-    if not (uid > 0 and uid < 0x10000):
+    if not (0 < uid < 0x10000):
         raise HidUsageError('Invalid usage ID')
 
 class HidUsagePrimitive(metaclass=ABCMeta):
@@ -102,25 +102,25 @@ class HidUsageRange(HidUsagePrimitive):
 
     def name(self, uid : int):
         """Generate the name of the usage."""
-        if uid is None:
-            return self._name
-        if uid < self._id_min or uid > self._id_max:
+        if uid and (uid < self._id_min or uid > self._id_max):
             raise HidUsageError('Invalid usage ID')
 
         _name_calc_regex = re.compile(r'([^{}]*)[{]([-+*/n0-9 ]+)[}]([^{}]*)')
         # the name shall contain a {} enclosed expression that can be evaluated
         # by substituting n with index
         match = _name_calc_regex.fullmatch(self._name)
-        if match is not None:
-            allowed2eval = {
-                'n': uid - self._id_min,
-                '__builtins__': None,
-                'math': None,
-            }
-            s = match.group(1) + str(eval(match.group(2), allowed2eval)) + match.group(3)
-            return s
+        if match is None:
+            raise HidUsageError('HidUsageRange name format invalid')
+        if uid is None:
+            return match.group(1) + match.group(3)
+        allowed2eval = {
+            'n': uid - self._id_min,
+            '__builtins__': None,
+            'math': None,
+        }
+        s = match.group(1) + str(eval(match.group(2), allowed2eval)) + match.group(3)
+        return s
 
-        raise HidUsageError('HidUsageRange name format invalid')
 
 class HidPage():
     """HID usage page"""
@@ -130,6 +130,9 @@ class HidPage():
         self._name = name
         self._desc = description
         self._usages = []
+        self._max_usage = 0
+        self._ius_max = 0
+        self._ius_mask = 0
 
     @property
     def name(self) -> str:
@@ -146,6 +149,12 @@ class HidPage():
     def add(self, primitive):
         # TODO: check if the new primitive's IDs aren't in use
         self._usages.append(primitive)
+        usage_max = primitive.id_range()[-1]
+        if primitive.types == [HidUsageType.INLINE_USAGE_SWITCH]:
+            self._ius_max = max(self._ius_max, usage_max)
+            self._ius_mask = self._ius_mask | usage_max
+        else:
+            self._max_usage = max(self._max_usage, usage_max)
 
     @property
     def usages(self) -> list:
@@ -153,9 +162,11 @@ class HidPage():
 
     @property
     def max_usage(self) -> int:
-        if len(self._usages) > 0:
-            return self._usages[-1].id_range()[-1]
-        return 0
+        return self._max_usage | self._ius_max
+
+    @property
+    def ius_mask(self) -> int:
+        return self._ius_mask
 
     def usage_ids_names(self) -> dict:
         table = {}
