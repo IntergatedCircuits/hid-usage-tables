@@ -38,11 +38,13 @@ class CppBuilder():
 
     def numeric(self, page, name):
         value_type = self.usage_value_type(page)
+        usage_name = page.usages[0].name(None) if len(page.usages) else page.description + ' '
         return (f'class {name.lower()};\n'
                  'template <>\n'
                 f'constexpr inline auto get_info<{name.lower()}>()\n'
                  '{\n'
-                f'    return info(0x{page.id:04x}, 0x{page.max_usage:04x}, "{escape_str(page.description)}");\n'
+                f'    return info(0x{page.id:04x}, 0x{page.max_usage:04x}, "{escape_str(page.description)}",\n'
+                f'                [](hid::usage_id_t id) {{ return id ? "{escape_str(usage_name)}{{}}" : nullptr; }});\n'
                  '}\n'
                 f'class {name.lower()}\n'
                  '{\n'
