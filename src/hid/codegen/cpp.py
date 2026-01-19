@@ -28,8 +28,7 @@ class CppBuilder():
         return f'{page_name.lower()}.hpp'
 
     def header(self, name, includes = '#include "hid/usage.hpp"\n'):
-        return (f'#ifndef __HID_PAGE_{name.upper()}_HPP_\n'
-                f'#define __HID_PAGE_{name.upper()}_HPP_\n'
+        return ( '#pragma once\n'
                  '\n'
                 f'{includes}'
                  '\n'
@@ -41,10 +40,10 @@ class CppBuilder():
         usage_name = page.usages[0].name(None) if len(page.usages) else page.description + ' '
         return (f'class {name.lower()};\n'
                  'template <>\n'
-                f'constexpr inline auto get_info<{name.lower()}>()\n'
+                f'constexpr auto get_info<{name.lower()}>()\n'
                  '{\n'
                 f'    return info(0x{page.id:04x}, 0x{page.max_usage:04x}, "{escape_str(page.description)}",\n'
-                f'                [](hid::usage_id_t id) {{ return id ? "{escape_str(usage_name)}{{}}" : nullptr; }});\n'
+                f'                [](hid::usage_id_t id) {{ return (id != 0) ? "{escape_str(usage_name)}{{}}" : nullptr; }});\n'
                  '}\n'
                 f'class {name.lower()}\n'
                  '{\n'
@@ -69,7 +68,7 @@ class CppBuilder():
 
         return (f'enum class {name.lower()} : {value_type};\n'
                 f'template <>\n'
-                f'constexpr inline auto get_info<{name.lower()}>()\n'
+                f'constexpr auto get_info<{name.lower()}>()\n'
                  '{\n'
                 f'    return info(0x{page.id:04x}, 0x{page.max_usage:04x}, "{escape_str(page.description)}",\n'
                  '                [](hid::usage_id_t id) {\n'
@@ -85,9 +84,7 @@ class CppBuilder():
                  '};\n')
 
     def footer(self, name):
-        return ('} // namespace hid::page\n'
-                 '\n'
-                f'#endif // __HID_PAGE_{name.upper()}_HPP_\n')
+        return ('} // namespace hid::page\n')
 
     def open_page_file(self, page_name):
         filepath = os.path.join(self.dest_path, self.page_filename(page_name))
@@ -121,7 +118,7 @@ class CppBuilder():
         with self.open_page_file(name) as file:
             file.write(self.header(name, headers))
             file.write(
-                 'constexpr inline auto get_page_info(page_id_t page_id)\n'
+                 'constexpr auto get_page_info(page_id_t page_id)\n'
                  '{\n'
                  '    switch (page_id) {\n'
                 f'{cases}'
