@@ -32,3 +32,7 @@
 100f SV "Waveform Brush Continuous"
 1010 SV "Waveform Eraser Continuous"
 1011 SV "Waveform Sparkle Continuous"
+1012 SV "Waveform Collide"
+1013 SV "Waveform Align"
+1014 SV "Waveform Step"
+1015 SV "Waveform Grow"
