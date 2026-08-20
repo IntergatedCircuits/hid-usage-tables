@@ -90,6 +90,15 @@ class CppBuilder():
         filepath = os.path.join(self.dest_path, self.page_filename(page_name))
         return open(filepath, 'w', encoding='utf-8')
 
+    def summary_path(self):
+        return os.path.join(self.dest_path, self.page_filename('all'))
+
+    def summary_matches(self, tag):
+        if tag is None or not os.path.exists(self.summary_path()):
+            return False
+        with open(self.summary_path(), encoding='utf-8') as file:
+            return file.readline() == f'// {tag}\n'
+
     def numeric_page(self, page):
         page_name = str_to_identifier(page.name).lower()
         with self.open_page_file(page_name) as file:
@@ -106,7 +115,7 @@ class CppBuilder():
             file.write(self.footer(page_name))
             return page_name
 
-    def summary_file(self, pages):
+    def summary_file(self, pages, tag=None):
         name = 'all'
         headers = ''.join(
                 f'#include "{page}.hpp"\n'
@@ -116,6 +125,8 @@ class CppBuilder():
                 f'    return get_info<{page}>();\n'
                 for page in pages)
         with self.open_page_file(name) as file:
+            if tag is not None:
+                file.write(f'// {tag}\n')
             file.write(self.header(name, headers))
             file.write(
                  'constexpr auto get_page_info(page_id_t page_id)\n'
@@ -132,10 +143,17 @@ class CppBuilder():
 
 # This file can be directly executed to perform code generation.
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print('Usage: python3 cpp.py <output_path>')
+    if len(sys.argv) not in (2, 3):
+        print('Usage: python3 cpp.py <output_path> [tag]')
         sys.exit(1)
     out_path = os.path.abspath(sys.argv[1])
+    tag = sys.argv[2] if len(sys.argv) == 3 else None
+    builder = CppBuilder(out_path)
+
+    if builder.summary_matches(tag):
+        print(f'HID usages at path "{out_path}" are up to date.')
+        sys.exit(0)
+
     hid_pages = parse_database()
 
     # delete previous generation
@@ -144,13 +162,12 @@ if __name__ == "__main__":
         shutil.rmtree(out_path)
     os.makedirs(out_path)
 
-    builder = CppBuilder(out_path)
     page_names = []
     for p in hid_pages:
         if len(p.usages) <= 1:
             page_names.append(builder.numeric_page(p))
         else:
             page_names.append(builder.enum_page(p))
-    builder.summary_file(page_names)
+    builder.summary_file(page_names, tag)
 
     print(f'HID usages code generation to path "{out_path}" is complete.')
